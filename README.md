@@ -106,6 +106,8 @@ After this, we can push the image to the DockerHub image registry:
 $ docker push docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea
 ```
 
+For this example we will not need to build the image but use the image already available in Dockerhub: `docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0` or `registry.cern.ch/docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea:1.0.0` in CERN Harbor registry pull-through cache (this avoids any DockerHub pull limits).
+
 Some data are located at the eos/public so in order to process the big amount of files, user should be authenticated with Kerberos.
 In our case we achieve it by setting up:
 ```console
@@ -117,6 +119,7 @@ workflow:
 ```
 If you are processing a small number of files (less than 10) you can set this option to `False`.
 Or you can also set the kerberos authentication via the Snakemake rules.
+A Kerberos keytab file needs to be generated and uploaded to the REANA client to succesfully run this example.
 For deeper understanding please refer to the (REANA documentation)[https://docs.reana.io/advanced-usage/access-control/kerberos/]
 
 
@@ -149,7 +152,7 @@ workflow:
   file: Snakefile
 outputs:
   files:
-    - histograms_merged.root
+    - histograms.root
 ```
 
 We can now install the REANA command-line client, run the analysis and download the
@@ -167,9 +170,9 @@ $ export REANA_ACCESS_TOKEN=XXXXXXX
 $ # run AGC workflow
 $ reana-client run -w reana-agc-cms-ttbar-coffea
 $ # ... should be finished in around 6 minutes if you select all files (-1 for n_files_max_per_sample) in inputs.yaml
-$ reana-client status
+$ reana-client status -w reana-agc-cms-ttbar-coffea
 $ # list workspace files
-$ reana-client ls
+$ reana-client ls -w reana-agc-cms-ttbar-coffea
 ```
 
 Please see the [REANA-Client](https://reana-client.readthedocs.io/) documentation for
