@@ -7,6 +7,21 @@
 name: ci
 
 on:
+
+lint-jsonlint:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+
+      - name: Lint JSON files
+        run: |
+          npm install jsonlint --global
+          ./run-tests.sh --lint-jsonlint
+
   push:
   pull_request:
   schedule:
