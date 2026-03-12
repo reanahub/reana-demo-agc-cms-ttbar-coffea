@@ -18,7 +18,7 @@ includes
 
 - columnar data extraction from large datasets,
 - processing of that data (event filtering, construction of observables,
-evaluation of systematic uncertainties) into histograms,
+  evaluation of systematic uncertainties) into histograms,
 
 - statistical model construction and statistical inference,
 - relevant visualizations for these steps,
@@ -31,39 +31,38 @@ implementation can be found in `analyses/cms-open-data-ttbar`.
 
 ### 1. Input data
 
-We are using [2015 CMS Open
-Data](https://cms.cern/news/first-cms-open-data-lhc-run-2-released) in this
-demonstration to showcase an analysis pipeline. The input `.root` files are
-located in the `nanoAODschema.json`. The current coffea AGC version defines the
-coffea Processor, which includes a lot of the physics analysis details:
+We are using
+[2015 CMS Open Data](https://cms.cern/news/first-cms-open-data-lhc-run-2-released)
+in this demonstration to showcase an analysis pipeline. The input `.root` files
+are located in the `nanoAODschema.json`. The current coffea AGC version defines
+the coffea Processor, which includes a lot of the physics analysis details:
 
 - event filtering and the calculation of observables,
 - event weighting,
 - calculating systematic uncertainties at the event and object level,
 - filling all the information into histograms that get aggregated and ultimately
-returned to us by coffea.
+  returned to us by coffea.
 
 The analysis takes the following inputs:
 
-- ``nanoAODschema.json`` input `.root` files
-- ``Snakefile`` The Snakefile for
-- ``ttbar_analysis_reana.ipynb`` The main notebook file where files are
-processed and analysed.
+- `nanoAODschema.json` input `.root` files
+- `Snakefile` The Snakefile for
+- `ttbar_analysis_reana.ipynb` The main notebook file where files are processed
+  and analysed.
 
-- ``file_merging.ipynb`` Notebook to merge each processed `.root` file in one
-file with unique keys.
+- `file_merging.ipynb` Notebook to merge each processed `.root` file in one file
+  with unique keys.
 
-- ``final_merging.ipynb`` Notebook to merge histograms together all of
+- `final_merging.ipynb` Notebook to merge histograms together all of
 
 ### 2. Analysis Code
 
 REANA supports the Snakemake workflow engine. To ensure optimal execution of the
 AGC ttbar workflow, we implement a two-level (multicascading) parallelization
 approach with Snakemake. Initially, Snakemake distributes all jobs across
-separate nodes, each working on a single `.roo`t file `for
-ttbar_analysis_reana.ipynb`. Once each rule completes, the individual files are
-merged into one per sample.
-#Here is the high level of AGC workflow
+separate nodes, each working on a single `.roo`t file
+`for ttbar_analysis_reana.ipynb`. Once each rule completes, the individual files
+are merged into one per sample. #Here is the high level of AGC workflow
 
 ```console
                                 +-----------------------------------------+
@@ -94,13 +93,13 @@ merged into one per sample.
 
 ### 3. Compute environment
 
-To be able to rerun the AGC after some time, we need to
-"encapsulate the current compute environment", for example to freeze the ROOT
-version our analysis is using. We shall achieve this by preparing a
-[Docker](https://www.docker.com/) container image for our analysis steps.
+To be able to rerun the AGC after some time, we need to "encapsulate the current
+compute environment", for example to freeze the ROOT version our analysis is
+using. We shall achieve this by preparing a [Docker](https://www.docker.com/)
+container image for our analysis steps.
 
-We are using the modified version of the ``analysis-systems-base`` [Docker
-image](https://github.com/iris-hep/analysis-systems-base) container with
+We are using the modified version of the `analysis-systems-base`
+[Docker image](https://github.com/iris-hep/analysis-systems-base) container with
 additional packages, the main on is
 [papermill](https://papermill.readthedocs.io/en/latest/) which allows running
 Jupyter Notebooks from the command line with additional parameters.
@@ -111,7 +110,9 @@ necessary packages for running the AGC analysis.
 ```console
 $ less environment/Dockerfile
 ```
+
 Let's enter the environment and build it
+
 ```console
 $ cd environment/
 ```
@@ -132,6 +133,7 @@ $ docker push docker.io/reanahub/reana-demo-agc-cms-ttbar-coffea
 Some data are located at the eos/public so in order to process the big amount of
 files, user should be authenticated with Kerberos. In our case we achieve it by
 setting up:
+
 ```console
 workflow:
   type: snakemake
@@ -139,6 +141,7 @@ workflow:
     kerberos: true
   file: Snakefile
 ```
+
 If you are processing a small number of files (less than 10) you can set this
 option to `False`. Or you can also set the kerberos authentication via the
 Snakemake rules. For deeper understanding please refer to the (REANA
@@ -146,9 +149,9 @@ documentation)[https://docs.reana.io/advanced-usage/access-control/kerberos/]
 
 ### 4. Analysis Workflow
 
-The [reana.yaml](reana.yaml) file describes the above analysis
-structure with its inputs, code, runtime environment, computational workflow
-steps and expected outputs:
+The [reana.yaml](reana.yaml) file describes the above analysis structure with
+its inputs, code, runtime environment, computational workflow steps and expected
+outputs:
 
 ```yaml
 version: 0.8.0
@@ -205,4 +208,3 @@ scenarios.
 The output is created under the name `histograms.root`, which can be further
 analyzed using various AGC tools. Below are simple figures of the collected
 results: ![Figure1](plots/4j1b_values.png) ![Figure2](plots/4j2b_values.png)
-
