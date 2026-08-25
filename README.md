@@ -190,7 +190,7 @@ $ # install REANA client
 $ pip install reana-client
 $ # connect to some REANA cloud instance
 $ export REANA_SERVER_URL=https://reana.cern.ch/
-$ export REANA_ACCESS_TOKEN=XXXXXXX
+$ export REANA_ACCESS_TOKEN=XXXXXXX # or use `reana-client login` for REANA 0.95
 $ # run AGC workflow
 $ reana-client run -w reana-agc-cms-ttbar-coffea
 $ # ... should be finished in around 6 minutes if you select all files (-1 for n_files_max_per_sample) in inputs.yaml
